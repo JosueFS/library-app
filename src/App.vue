@@ -1,0 +1,66 @@
+<template>
+  <CFlex
+    id="app"
+    color="white"
+    bg="gray.100"
+    mx="auto"
+    minH="100vh"
+    align="center"
+    justify="center"
+  >
+    <Sidebar />
+  </CFlex>
+</template>
+
+<script>
+import Sidebar from './components/Sidebar.vue';
+export default {
+  components: {
+    Sidebar,
+  },
+  created() {
+    // console.log('App created!', this);
+  },
+};
+</script>
+
+<style lang="scss">
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+}
+
+@for $i from 10 through 32 {
+  .fs-#{$i} {
+    font-size: $i + px;
+  }
+}
+
+@for $i from 8 through 64 {
+  .lh-#{$i} {
+    line-height: $i + px;
+  }
+}
+
+@for $i from 4 through 9 {
+  .fw-#{$i}00 {
+    font-weight: #{$i} + '00';
+  }
+}
+
+@for $i from 1 through 16 {
+  .gap-#{$i} {
+    gap: $i * 4 + px;
+  }
+}
+
+//500ms
+@for $i from 1 through 10 {
+  .transition-#{$i} {
+    transition: all $i * 500 + ms;
+  }
+}
+</style>
