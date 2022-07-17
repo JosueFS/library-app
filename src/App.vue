@@ -1,22 +1,20 @@
 <template>
-  <CFlex
-    id="app"
-    color="white"
-    bg="gray.100"
-    mx="auto"
-    minH="100vh"
-    align="center"
-    justify="center"
-  >
-    <Sidebar />
+  <CFlex id="app" color="white" bg="gray.100" p="4" mx="auto" h="100vh" gap="1">
+    <TheSidebar />
+    <CFlex direction="column">
+      <TheHeader />
+      <router-view :key="$route.fullPath"></router-view>
+    </CFlex>
   </CFlex>
 </template>
 
 <script>
-import Sidebar from './components/Sidebar.vue';
+import TheSidebar from './layouts/TheSidebar.vue';
+import TheHeader from './layouts/TheHeader.vue';
 export default {
   components: {
-    Sidebar,
+    TheHeader,
+    TheSidebar,
   },
   created() {
     // console.log('App created!', this);

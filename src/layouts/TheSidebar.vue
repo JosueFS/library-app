@@ -1,10 +1,9 @@
 <template>
   <CFlex
-    pos="absolute"
+    pos="sticky"
     direction="column"
     h="95vh"
     :w="isOpen ? '250px' : '64px'"
-    @mouseleave="mouseIsOverMenu = false"
     left="5"
     p="3"
     bg="gray.400"
@@ -29,17 +28,18 @@
     <!-- Menu items -->
     <CFlex direction="column" gap="2">
       <SidebarItem
-        v-for="{ title, icon } in menuOptions"
+        v-for="{ title, icon, route } in menuOptions"
         :key="icon"
         :title="title"
         :icon="icon"
+        @click="onClickItem(route)"
       />
     </CFlex>
 
     <!-- User Information -->
     <CFlex direction="column" justify="center" mt="auto" gap="2">
       <CDivider />
-      <SidebarUserAvatar :isOpen="isOpen" />
+      <SidebarUserAvatar :isOpen="isOpen" @click="onClickAvatar" />
       <SidebarItem
         title="Sair"
         icon="logout"
@@ -63,24 +63,41 @@ export default {
   },
   data() {
     return {
-      mouseIsOverMenu: false,
       pinOpenMenu: false,
       menuOptions: [
-        { title: 'Lista de livros', icon: 'menu_book' },
-        { title: 'Favoritos', icon: 'favorite' },
-        { title: 'Devolver Livro', icon: 'refresh' },
-        { title: 'Doar Livro', icon: 'volunteer_activism' },
+        { title: 'Livros', icon: 'menu_book', route: '/inicio' },
+        { title: 'Favoritos', icon: 'favorite', route: '/favoritos' },
+        { title: 'Devolver', icon: 'refresh', route: '/devolver' },
+        {
+          title: 'Doar Livro',
+          icon: 'volunteer_activism',
+          route: '/doar-livro',
+        },
       ],
     };
   },
   computed: {
     isOpen() {
-      return this.mouseIsOverMenu || this.pinOpenMenu;
+      return this.pinOpenMenu;
     },
   },
   methods: {
+    closeMenu() {
+      this.pinOpenMenu = false;
+    },
     toggleMenu() {
       this.pinOpenMenu = !this.pinOpenMenu;
+    },
+    onClickItem(route) {
+      console.log('onClickItem', this.$router);
+      if (route !== this.$route.path) {
+        this.$router.push(route);
+      }
+      this.closeMenu();
+    },
+    onClickAvatar() {
+      console.log('onClickAvatar');
+      this.closeMenu();
     },
   },
 };

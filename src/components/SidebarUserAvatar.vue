@@ -1,5 +1,17 @@
 <template>
-  <CFlex gap="2" overflow="hidden" minH="48px" align="center">
+  <CFlex
+    :px="isOpen ? '2' : '0'"
+    gap="2"
+    overflow="hidden"
+    minH="48px"
+    align="center"
+    style="cursor: pointer; transition: all 0.5s ease-in-out"
+    :_hover="{
+      backgroundColor: 'gray.200',
+    }"
+    rounded="4px"
+    @click="$emit('click')"
+  >
     <CAvatar
       :size="isOpen ? 'md' : 'sm'"
       :name="user.name"
