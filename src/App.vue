@@ -1,8 +1,17 @@
 <template>
-  <CFlex id="app" color="white" bg="gray.100" p="4" mx="auto" h="100vh" gap="1">
+  <CFlex
+    id="app"
+    color="white"
+    bg="gray.100"
+    pr="4"
+    mx="auto"
+    h="100vh"
+    gap="1"
+  >
     <TheSidebar />
-    <CFlex direction="column">
-      <TheHeader />
+    <CFlex direction="column" align="start">
+      <!-- <TheHeader /> -->
+      <CHeading p="2" font-size="xl"> {{ $route.meta.title }} </CHeading>
       <router-view :key="$route.fullPath"></router-view>
     </CFlex>
   </CFlex>

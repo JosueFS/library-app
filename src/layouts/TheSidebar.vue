@@ -1,14 +1,12 @@
 <template>
   <CFlex
-    pos="sticky"
     direction="column"
-    h="95vh"
+    h="100vh"
     :w="isOpen ? '250px' : '64px'"
     left="5"
     p="3"
     bg="gray.400"
     color="white"
-    borderRadius="10px"
     boxShadow="0 4px 12px 0 rgba(0, 0, 0, 0.05)"
     class="transition-1"
   >
@@ -23,6 +21,33 @@
       >
         <Icon :name="pinOpenMenu ? 'close' : 'menu'" iconColor="#000"> </Icon>
       </CButton>
+    </CFlex>
+
+    <CFlex h="40px">
+      <CButton
+        v-if="!isOpen"
+        px="2"
+        variant="ghost"
+        :_hover="{}"
+        :_active="{}"
+        @click="toggleMenu()"
+      >
+        <Icon name="search" iconColor="#000" />
+      </CButton>
+
+      <CInputGroup v-else w="100%">
+        <CInputLeftElement>
+          <Icon name="search" iconColor="#ccc" />
+        </CInputLeftElement>
+        <CInput
+          type="text"
+          placeholder="Buscar"
+          roundedLeft="20px"
+          roundedRight="20px"
+          @focus="color = '#222'"
+          @blur="color = '#eee'"
+        />
+      </CInputGroup>
     </CFlex>
 
     <!-- Menu items -->

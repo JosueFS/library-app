@@ -10,14 +10,14 @@ const defaultRoutes = [
     component: Home,
     meta: {
       // forAuth: true,
-      title: "Home"
+      title: "Início"
     },
   },
   {
     path: "/favoritos",
     component: Home,
     meta: {
-      forAuth: true,
+      // forAuth: true,
       title: "Favoritos"
     },
   },
@@ -25,7 +25,7 @@ const defaultRoutes = [
     path: "/devolver",
     component: Home,
     meta: {
-      forAuth: true,
+      // forAuth: true,
       title: "Devolver"
     },
   },
@@ -33,7 +33,7 @@ const defaultRoutes = [
     path: "/doar-livro",
     component: Home,
     meta: {
-      forAuth: true,
+      // forAuth: true,
       title: "Doar Livro"
     },
   },
