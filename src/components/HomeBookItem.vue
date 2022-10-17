@@ -1,7 +1,5 @@
 <template>
   <CFlex
-    maxW="150px"
-    px="2"
     gap="2"
     overflow="hidden"
     align="center"
@@ -13,12 +11,12 @@
     direction="column"
     @click="$emit('click')"
   >
-    <CImage :src="book.image" :alt="book.title" />
+    <CImage :src="book.image" :alt="book.title" h="100%" />
     <CFlex direction="column">
-      <CHeading mt="1" as="h6" font-size="sm" line-height="tight" is-truncated>
+      <CHeading mt="1" as="h6" is-truncated>
         {{ book.title }}
       </CHeading>
-      <CText mt="1" font-size="12px" is-truncated>
+      <CText mt="1" fontSize="0.75rem" is-truncated>
         {{ book.author }}
       </CText>
     </CFlex>
