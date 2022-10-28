@@ -6,8 +6,10 @@
   box-sizing: border-box;
 }
 
-html {
-  max-width: 720px;
+html,
+body,
+#app {
+  height: 100%;
   margin: auto;
-  background-color: #E5E5E5;
+  background-color: #e5e5e5;
 }

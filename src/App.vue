@@ -1,8 +1,8 @@
 <template>
-  <CFlex id="app" color="white" bg="gray.100" p="4" mx="auto" h="100vh" gap="1">
+  <CFlex id="app" color="white" bg="gray.100" mx="auto" h="100%" gap="4">
     <TheSidebar />
-    <CFlex direction="column">
-      <TheHeader />
+    <CFlex direction="column" h="100vh" py="4">
+      <!-- <TheHeader /> -->
       <router-view :key="$route.fullPath"></router-view>
     </CFlex>
   </CFlex>
@@ -29,6 +29,15 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 @for $i from 10 through 32 {
