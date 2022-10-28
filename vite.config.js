@@ -1,11 +1,31 @@
-const path = require('path')
-const { createVuePlugin } = require('vite-plugin-vue2');
+import path from 'path';
+import vue from '@vitejs/plugin-vue2';
+// import graphqlPlugin from 'vite-plugin-graphql'
 
-module.exports = {
+export default {
+  // build: {
+  //   rollupOptions: {
+  //     output: {
+  //       manualChunks: {
+  //         vendorApollo: [
+  //           'vue-apollo',
+  //           'apollo-cache-inmemory',
+  //           'apollo-client',
+  //           'apollo-link',
+  //           'apollo-link-context',
+  //           'apollo-link-http'
+  //         ],
+  //       }
+  //     }
+  //   }
+  // },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
     },
   },
-  plugins: [createVuePlugin()],
+  plugins: [
+    vue(),
+    // graphqlPlugin,
+  ],
 };
