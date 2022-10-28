@@ -13,9 +13,11 @@
     :_active="{ bg: `${colorName}.400`, color: dark ? 'black' : 'white' }"
     @click="$emit('click')"
   >
-    <CFlex align="center" gap="2" overflow="hidden">
-      <Icon :name="icon" iconColor="currentColor"> </Icon>
-      <CText isTruncated class="lh-16">{{ title }}</CText>
+    <CFlex alignItems="center" gap="2" overflow="hidden">
+      <Icon :name="icon" class="fs-20" iconColor="currentColor"> </Icon>
+      <CText isTruncated fontSize="14" fontWeight="800" class="lh-16">{{
+        title
+      }}</CText>
     </CFlex>
   </CButton>
 </template>
@@ -41,7 +43,7 @@ export default {
     color: {
       type: String,
       required: false,
-      default: 'indigo.500',
+      default: 'blue.800',
     },
     dark: {
       type: Boolean,

@@ -1,28 +1,31 @@
 <template>
   <CFlex
-    pos="sticky"
+    flexShrink="0"
     direction="column"
-    h="95vh"
-    :w="isOpen ? '250px' : '64px'"
-    left="5"
-    p="3"
-    bg="gray.400"
+    h="100vh"
+    w="256px"
+    p="6"
+    bg="gray.300"
     color="white"
-    borderRadius="10px"
     boxShadow="0 4px 12px 0 rgba(0, 0, 0, 0.05)"
     class="transition-1"
   >
-    <!-- Toggle Button Menu  -->
-    <CFlex mb="3">
-      <CButton
-        px="2"
-        variant="ghost"
-        :_hover="{}"
-        :_active="{}"
-        @click="toggleMenu()"
+    <!-- Logo -->
+    <CFlex mb="3" alignItems="center" gap="3">
+      <CAvatar
+        borderColor="black"
+        size="md"
+        src="https://media-exp1.licdn.com/dms/image/C4D0BAQEn2cw2tJcU9w/company-logo_200_200/0/1625761088469?e=2147483647&v=beta&t=suaNDr9XUFVfrqTrpV128RUIa1j76cala28wkyBNkos"
+      />
+      <CText
+        alignItems="left"
+        fontSize="20"
+        fontWeight="800"
+        color="gray.800"
+        isTruncated
       >
-        <Icon :name="pinOpenMenu ? 'close' : 'menu'" iconColor="#000"> </Icon>
-      </CButton>
+        Biblioteca JG
+      </CText>
     </CFlex>
 
     <!-- Menu items -->
