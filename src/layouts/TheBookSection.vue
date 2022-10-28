@@ -1,9 +1,9 @@
 <template>
-  <CFlex direction="column" pr="4">
+  <CFlex direction="column" px="4">
     <CHeading font-size="4xl" textAlign="left"> Livros </CHeading>
     <CGrid
       ref="container"
-      :template-columns="`repeat(${columnCount}, minmax(124px, 1fr))`"
+      :template-columns="`repeat(${columnCount}, minmax(124px, 360px))`"
       mt="2"
       gap="4"
     >
@@ -32,7 +32,7 @@ export default {
   },
   data: () => ({
     currentBreakpoint: 0,
-    columnCountBreakpoints: [768, 960, 1024, 1440],
+    columnCountBreakpoints: [280, 500, 768, 960, 1024, 1440],
     containerResizeObserver: null,
   }),
   computed: {

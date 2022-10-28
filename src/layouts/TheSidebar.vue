@@ -28,6 +28,33 @@
       </CText>
     </CFlex>
 
+    <CFlex h="40px">
+      <CButton
+        v-if="!isOpen"
+        px="2"
+        variant="ghost"
+        :_hover="{}"
+        :_active="{}"
+        @click="toggleMenu()"
+      >
+        <Icon name="search" iconColor="#000" />
+      </CButton>
+
+      <CInputGroup v-else w="100%">
+        <CInputLeftElement>
+          <Icon name="search" iconColor="#ccc" />
+        </CInputLeftElement>
+        <CInput
+          type="text"
+          placeholder="Buscar"
+          roundedLeft="20px"
+          roundedRight="20px"
+          @focus="color = '#222'"
+          @blur="color = '#eee'"
+        />
+      </CInputGroup>
+    </CFlex>
+
     <!-- Menu items -->
     <CFlex direction="column" gap="2">
       <SidebarItem

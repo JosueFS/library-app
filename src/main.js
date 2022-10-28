@@ -8,6 +8,8 @@ import {
 import "@/plugins/chakra.js";
 import router from "@/routes";
 
+import "@/css/reset.css";
+
 Vue.config.productionTip = false;
 
 console.log(router);
