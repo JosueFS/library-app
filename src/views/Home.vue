@@ -1,18 +1,14 @@
 <template>
-  <CFlex direction="column" h="100%">
-    <CHeading font-size="xl"> Livros </CHeading>
-    <CFlex overflow="scroll" flexWrap="wrap" gap="1">
-      <HomeBookItem :key="index" v-for="(_, index) in 30" w="40%" />
-    </CFlex>
-  </CFlex>
+  <TheBookSection />
 </template>
 
 <script>
-import HomeBookItem from '@/components/HomeBookItem.vue';
+import TheBookSection from '@/layouts/TheBookSection.vue';
+
 export default {
   name: 'Home',
   components: {
-    HomeBookItem,
+    TheBookSection,
   },
 };
 </script>
