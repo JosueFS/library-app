@@ -103,7 +103,7 @@ export default {
       this.windowSize = window.innerWidth;
     },
   },
-  created() {
+  async created() {
     this.updateWindowSize();
     window.addEventListener('resize', this.updateWindowSize);
   },

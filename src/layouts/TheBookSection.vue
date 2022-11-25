@@ -1,7 +1,15 @@
 <template>
   <CFlex direction="column" px="4">
-    <CHeading font-size="4xl" textAlign="left"> Livros </CHeading>
+    <CFlex justify="space-between" align="center">
+      <CHeading font-size="4xl" textAlign="left"> Livros </CHeading>
+      <CHeading as="h6" size="xs" textAlign="left" class="fw-800">
+        <a v-chakra href="#" :_hover="{ textDecoration: 'underline' }">
+          VER TUDO
+        </a>
+      </CHeading>
+    </CFlex>
     <CGrid
+      v-if="books.length"
       ref="container"
       :template-columns="`repeat(${columnCount}, minmax(124px, 360px))`"
       mt="2"
@@ -9,10 +17,12 @@
     >
       <HomeBookItem
         ref="container-item"
-        :key="index"
         v-for="(_, index) in columnCount"
+        :key="index"
+        :book="books[index]"
       />
     </CGrid>
+    <c-circular-progress v-else is-indeterminate />
   </CFlex>
 </template>
 
@@ -21,12 +31,13 @@ import HomeBookItem from '@/components/HomeBookItem.vue';
 
 export default {
   name: 'TheBookSection',
-  // props: {
-  //   books: {
-  //     type: Array,
-  //     required: false,
-  //   }
-  // },
+  props: {
+    books: {
+      type: Array,
+      required: false,
+      default: () => [],
+    },
+  },
   components: {
     HomeBookItem,
   },
@@ -60,7 +71,7 @@ export default {
     },
   },
   mounted() {
-    console.log('mounted');
+    console.log('mounted => ', this);
     this.updateWidth();
     this.containerResizeObserver = new ResizeObserver(this.updateWidth);
     this.containerResizeObserver.observe(this.$el);
