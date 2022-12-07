@@ -27,7 +27,7 @@
           <!-- <Icon :name="pinOpenMenu ? 'close' : 'menu'" iconColor="#000"> </Icon> -->
         </CButton>
         <CImage
-          :src="require('./assets/book2.png')"
+          :src="require('@/assets/book2.png')"
           alt="Logotipo: Livro aberto mostrando a capa vermelha"
           h="80%"
         />

@@ -1,5 +1,6 @@
 <template>
   <CFlex
+    v-if="user?.sub"
     :px="isOpen ? '2' : '0'"
     gap="2"
     overflow="hidden"
@@ -14,21 +15,26 @@
   >
     <CAvatar
       :size="isOpen ? 'md' : 'sm'"
-      :name="user.name"
+      :name="user.fullName"
       :src="user.avatarUrl"
       :ml="isOpen ? '0' : '1'"
       class="transition-1"
     />
     <CFlex direction="column">
       <CHeading as="h3" size="sm" align="left" color="gray.800" isTruncated>
-        {{ user.name }}
+        {{ user.fullName }}
       </CHeading>
-      <CText align="left" color="gray.600" isTruncated> {{ user.team }} </CText>
+      <CText align="left" color="gray.600" isTruncated>
+        {{ user.team || 'Time' }}
+      </CText>
     </CFlex>
   </CFlex>
 </template>
 
 <script>
+import { mapState } from 'pinia';
+
+import { useAuthStore } from '@/store/auth';
 export default {
   name: 'SidebarUserAvatar',
   props: {
@@ -39,14 +45,7 @@ export default {
     },
   },
   computed: {
-    user() {
-      //getter
-      return {
-        name: 'Evan You',
-        avatarUrl: 'https://bit.ly/chakra-evan-you',
-        team: 'Engenharia',
-      };
-    },
+    ...mapState(useAuthStore, { user: 'getUser' }),
   },
 };
 </script>

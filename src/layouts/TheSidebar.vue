@@ -3,7 +3,7 @@
     flexShrink="0"
     direction="column"
     h="100vh"
-    w="256px"
+    w="288px"
     p="6"
     bg="gray.300"
     color="white"
@@ -70,23 +70,20 @@
     <CFlex direction="column" justify="center" mt="auto" gap="2">
       <CDivider />
       <SidebarUserAvatar :isOpen="isOpen" @click="onClickAvatar" />
-      <SidebarItem
-        title="Sair"
-        icon="logout"
-        color="red.600"
-        variant="outline"
-      />
+      <GoogleSignInButton />
     </CFlex>
   </CFlex>
 </template>
 
 <script>
+import GoogleSignInButton from '@/components/GoogleSignInButton.vue';
 import Icon from '@/components/BaseIcon.vue';
 import SidebarItem from '@/components/SidebarItem.vue';
 import SidebarUserAvatar from '@/components/SidebarUserAvatar.vue';
 export default {
   name: 'Sidebar',
   components: {
+    GoogleSignInButton,
     Icon,
     SidebarItem,
     SidebarUserAvatar,
@@ -129,6 +126,9 @@ export default {
       console.log('onClickAvatar');
       this.closeMenu();
     },
+  },
+  created() {
+    console.log(this.$chakra);
   },
 };
 </script>
