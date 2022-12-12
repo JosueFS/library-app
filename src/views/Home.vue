@@ -1,23 +1,20 @@
 <template>
   <!-- <TheBookSection :books="books" /> -->
-  <BarCodeScanner
-    :onDetected="logIt"
-    :readerSize="readerSize"
-    :readerTypes="['ean_reader']"
-  />
+
+  <BarCodeReader :readerSize="readerSize" :readerTypes="['ean_reader']" />
 </template>
 
 <script>
 import GET_BOOKS from '@/graphql/GetBooks.gql';
 
 import TheBookSection from '@/layouts/TheBookSection.vue';
-import BarCodeScanner from '@/components/BarCodeScanner.vue';
+import BarCodeReader from '@/components/BarCodeReader.vue';
 
 export default {
   name: 'Home',
   components: {
     TheBookSection,
-    BarCodeScanner,
+    BarCodeReader,
   },
   data: () => ({
     books: [],

@@ -1,13 +1,5 @@
 <template>
-  <div id="interactive" class="viewport scanner">
-    <CButton @click="selectedDevice = devicesList?.[3] || devicesList?.[0]"
-      >Ativar</CButton
-    >
-    <pre>{{ test }}</pre>
-
-    <video></video>
-    <canvas class="drawingBuffer"></canvas>
-  </div>
+  <CInput type="file" accept="image/*" capture="camera" @change="processEAN" />
 </template>
 
 <script>
@@ -99,74 +91,64 @@ export default {
   computed: {
     quaggaState() {
       return {
+        src: 'imageName.jpg',
+        numOfWorkers: 0,
         inputStream: {
-          type: 'LiveStream',
-          constraints: {
-            width: { min: this.readerSize.width },
-            height: { min: this.readerSize.height },
-            facingMode: this.facingMode,
-            aspectRatio: { min: 1, max: 2 },
-            device: this.selectedDevice,
-          },
-        },
-        locator: {
-          patchSize: 'medium',
-          halfSample: true,
-        },
-        numOfWorkers: 2,
-        frequency: 10,
-        decoder: {
-          readers: this.readerTypes,
+          type: 'ImageStream',
+          size: 800,
         },
         locate: true,
+        decoder: {
+          readers: [
+            'code_128_reader',
+            'ean_reader',
+            'ean_8_reader',
+            'code_39_reader',
+            'code_39_vin_reader',
+            'codabar_reader',
+            'upc_reader',
+            'upc_e_reader',
+            'i2of5_reader',
+            '2of5_reader',
+            'code_93_reader',
+          ],
+        },
       };
     },
-    capabilities() {
-      return Quagga?.CameraAccess?.getActiveTrack?.()?.getCapabilities?.();
+  },
+  methods: {
+    processEAN(e) {
+      if (e.target.files && e.target.files.length) {
+        const src = URL.createObjectURL(e.target.files[0]);
+        console.log(src);
+        const t = Quagga.decodeSingle(
+          {
+            src,
+          },
+          (result) => {
+            console.log(result);
+          }
+        );
+        console.log(t);
+      }
     },
   },
   watch: {
     onDetected: function (oldValue, newValue) {
       if (oldValue) Quagga.offDetected(oldValue);
       if (newValue) Quagga.onDetected(newValue);
-      console.log(newValue);
+      console.log('Detected =>', newValue);
     },
     onProcessed: function (oldValue, newValue) {
       if (oldValue) Quagga.offProcessed(oldValue);
       if (newValue) Quagga.onProcessed(newValue);
       this.test = newValue;
-      console.log(newValue);
-    },
-    quaggaState: {
-      handler(val) {
-        console.log(val);
-        Quagga.init(this.quaggaState, function (err) {
-          if (err) {
-            return console.error(err);
-          }
-          Quagga.start();
-        });
-        Quagga?.CameraAccess?.getActiveTrack?.().applyConstraints({
-          width: { min: this.readerSize.width },
-          height: { min: this.readerSize.height },
-          aspectRatio: { min: 1, max: 2 },
-          device: this.selectedDevice,
-        });
-      },
-      deep: true,
+      console.log('Processed =>', newValue);
     },
   },
   mounted: async function () {
-    Quagga.init(this.quaggaState, function (err) {
-      if (err) {
-        return console.error(err);
-      }
-      Quagga.start();
-    });
     Quagga.onDetected(this.onDetected);
     Quagga.onProcessed(this.onProcessed);
-    const devices = await Quagga.CameraAccess.enumerateVideoDevices();
-    this.devicesList.push(...devices);
   },
   destroyed: function () {
     if (this.onDetected) Quagga.offDetected(this.onDetected);
@@ -183,7 +165,6 @@ export default {
 }
 .viewport canvas,
 .viewport video {
-  /* position: absolute; */
   left: 0;
   top: 0;
 }
