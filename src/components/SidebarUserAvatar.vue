@@ -1,7 +1,7 @@
 <template>
   <CFlex
     v-if="user?.sub"
-    :px="isOpen ? '2' : '0'"
+    px="2"
     gap="2"
     overflow="hidden"
     minH="48px"
@@ -14,10 +14,10 @@
     @click="$emit('click')"
   >
     <CAvatar
-      :size="isOpen ? 'md' : 'sm'"
+      size="md"
       :name="user.fullName"
       :src="user.avatarUrl"
-      :ml="isOpen ? '0' : '1'"
+      ml="0"
       class="transition-1"
     />
     <CFlex direction="column">
@@ -37,13 +37,6 @@ import { mapState } from 'pinia';
 import { useAuthStore } from '@/store/auth';
 export default {
   name: 'SidebarUserAvatar',
-  props: {
-    isOpen: {
-      type: Boolean,
-      required: false,
-      default: false,
-    },
-  },
   computed: {
     ...mapState(useAuthStore, { user: 'getUser' }),
   },

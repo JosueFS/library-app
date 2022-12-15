@@ -70,9 +70,9 @@
     </CFlex>
 
     <TheSidebar v-else />
-    <CFlex direction="column" h="100vh" py="4">
+    <CFlex direction="column" h="100vh" w="100%" px="2" py="4">
       <!-- <TheHeader /> -->
-      <!-- <CHeading p="2" as="h2"> {{ $route.meta.title }} </CHeading> -->
+      <CHeading py="2" as="h2" align="left"> {{ $route.meta.title }} </CHeading>
       <router-view :key="$route.fullPath"></router-view>
     </CFlex>
   </CFlex>
