@@ -7,6 +7,7 @@ pinia.use(piniaPersistPlugin);
 import App from '@/App.vue';
 import router from '@/routes';
 
+import '@/plugins/axios.js';
 import '@/plugins/chakra.js';
 import '@/css/reset.css';
 import { apolloProvider } from '@/plugins/apollo';
