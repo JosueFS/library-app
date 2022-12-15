@@ -69,7 +69,7 @@
     <!-- User Information -->
     <CFlex direction="column" justify="center" mt="auto" gap="2">
       <CDivider />
-      <SidebarUserAvatar :isOpen="isOpen" @click="onClickAvatar" />
+      <SidebarUserAvatar @click="onClickAvatar" />
       <GoogleSignInButton />
     </CFlex>
   </CFlex>
@@ -96,9 +96,9 @@ export default {
         { title: 'Favoritos', icon: 'favorite', route: '/favoritos' },
         { title: 'Devolver', icon: 'refresh', route: '/devolver' },
         {
-          title: 'Doar Livro',
+          title: 'Cadastrar',
           icon: 'volunteer_activism',
-          route: '/doar-livro',
+          route: '/cadastrar',
         },
       ],
     };
