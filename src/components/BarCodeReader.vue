@@ -1,108 +1,93 @@
 <template>
-  <div style="position: relative">
+  <CFlex w="100%" flexDirection="column" gap="2" align="center">
+    <CInput
+      type="number"
+      placeholder="Digite o Código EAN/ISBN"
+      p="8px"
+      h="fit-content"
+      w="100%"
+      size="sm"
+      borderRadius="4px"
+      variant="outline"
+      style="flex: 0 0 auto"
+    />
+
     <CInput
       type="file"
       accept="image/*"
       capture="camera"
+      p="8px"
+      h="fit-content"
+      w="100%"
+      size="sm"
+      borderRadius="4px"
+      variant="outline"
+      style="flex: 0 0 auto"
       @change="processEAN"
     />
-    <CButton
-      px="2"
-      style="position: absolute; right: 8px; margin-top: 8px; z-index: 999"
-      @click="showDeviceSelector = true"
-    >
-      <Icon name="cameraswitch" iconColor="#000" />
-    </CButton>
-    <CModal
-      v-if="devices.length"
-      :isOpen="showDeviceSelector"
-      :onClose="
-        () => {
-          showDeviceSelector = false;
-        }
-      "
-    >
-      <CModalContent ref="content">
-        <CModalHeader>Mudar câmera</CModalHeader>
-        <CModalCloseButton />
-        <CModalBody>
-          <CRadioGroup v-model="selectedDeviceId">
-            <CRadio
-              v-for="device in devices"
-              :key="device.id"
-              :value="device.id"
-            >
-              {{ device.label }}
-            </CRadio>
-          </CRadioGroup>
-        </CModalBody>
-        <CModalFooter>
-          <CButton variant-color="blue" mr="3"> Confirmar </CButton>
-          <CButton @click="showDeviceSelector = false">Cancelar</CButton>
-        </CModalFooter>
-      </CModalContent>
-      <CModalOverlay />
-    </CModal>
+
+    <CFlex align="center" w="100%" gap="4">
+      <CTooltip label="Ler código" placement="top" hasArrow>
+        <CButton
+          px="2"
+          gap="4"
+          size="lg"
+          variant="outline"
+          variant-color="gray.900"
+          @click="openScanner"
+        >
+          <span as="h4">Usar leitor de código</span>
+          <Icon name="qr_code_scanner" iconColor="#000" />
+        </CButton>
+      </CTooltip>
+    </CFlex>
+
     <div id="qr-reader" style="width: 100%"></div>
-  </div>
+
+    <pre>{{ response }}</pre>
+
+    <BarCodeScanner
+      v-if="showScannerDialog"
+      v-model="showScannerDialog"
+      @fetchBook="setResponse"
+    />
+  </CFlex>
 </template>
 
 <script>
 import Icon from '@/components/BaseIcon.vue';
+import BarCodeScanner from '@/components/BarCodeScanner.vue';
 
 export default {
+  name: 'BarCodeReader',
   components: {
     Icon,
+    BarCodeScanner,
   },
   data: () => ({
-    devices: [],
-    selectedDeviceId: '',
-    showDeviceSelector: false,
+    Reader: undefined,
+    showScannerDialog: false,
+    response: '',
   }),
   methods: {
-    processEAN(e) {
-      // console.log(e);
+    async processEAN(e) {
       if (e.target.files && e.target.files.length) {
-        const src = URL.createObjectURL(e.target.files[0]);
-        let image = new Image();
-        image.crossOrigin = 'Anonymous';
-        image.src = src;
-        console.log(image);
+        const file = e.target.files[0];
+
+        const decodedText = await this.Reader.scanFile(file, true);
+        console.log(decodedText);
       }
+    },
+    openScanner() {
+      this.showScannerDialog = true;
+    },
+    setResponse(response) {
+      this.response = response;
     },
   },
   async mounted() {
-    const devices = await Html5Qrcode.getCameras(); //.then(devices => {
-    this.devices.push(...devices);
-    /**
-     * devices would be an array of objects of type:
-     * { id: "id", label: "label" }
-     */
-    if (devices && devices.length) {
-      let cameraId = this.selectedDeviceId || devices[0].id;
-      this.selectedDeviceId = cameraId;
-      console.log('CameraID => ', cameraId);
-      // .. use this to start scanning.
-      const Scanner = new Html5Qrcode('qr-reader');
-      await Scanner.start(
-        cameraId,
-        {
-          fps: 10, // Optional, frame per seconds for qr code scanning
-          qrbox: 250, // Optional, if you want bounded box UI
-        },
-        (decodedText, decodedResult) => {
-          // do something when code is read
-          console.log('decodedText => ', decodedText);
-          console.log('decodedResult => ', decodedResult);
-        },
-        (errorMessage) => {
-          // parse error, ignore it.
-          // console.error(errorMessage);
-        }
-      );
-    }
+    this.Reader = new Html5Qrcode('qr-reader');
   },
-  created() {},
 };
 </script>
 

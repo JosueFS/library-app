@@ -1,171 +1,188 @@
 <template>
-  <CInput type="file" accept="image/*" capture="camera" @change="processEAN" />
+  <CModal :isOpen="value" :onClose="closeModal">
+    <CModalContent minH="300px" h="fit-content">
+      <CModalHeader>Posicione sobre o código</CModalHeader>
+      <CModalCloseButton />
+      <CModalBody
+        style="position: relative; display: flex; flex-direction: column"
+      >
+        <div id="qr-scanner" style="width: 100%"></div>
+
+        <CSpinner
+          v-if="loadingCamera"
+          m="auto"
+          thickness="4px"
+          speed="0.65s"
+          empty-color="blue.200"
+          color="blue.500"
+          size="xl"
+        />
+
+        <template v-else>
+          <CFlex style="position: static">
+            <CButton
+              px="2"
+              class="btn-camera-switch"
+              @click="
+                loadCamera();
+                showDeviceSelector = true;
+              "
+            >
+              <Icon name="cameraswitch" iconColor="#000" />
+            </CButton>
+
+            <CModal
+              v-if="devices.length"
+              :isOpen="showDeviceSelector"
+              :onClose="
+                () => {
+                  showDeviceSelector = false;
+                }
+              "
+            >
+              <CModalContent ref="content">
+                <CModalHeader>Mudar câmera</CModalHeader>
+                <CModalCloseButton />
+                <CModalBody>
+                  <CRadioGroup v-model="selectedDeviceId">
+                    <CRadio
+                      v-for="device in devices"
+                      :key="device.id"
+                      :value="device.id"
+                    >
+                      {{ device.label }}
+                    </CRadio>
+                  </CRadioGroup>
+                </CModalBody>
+                <CModalFooter>
+                  <CButton variant-color="blue" mr="3" @click="reloadCamera">
+                    Confirmar
+                  </CButton>
+                  <CButton @click="showDeviceSelector = false"
+                    >Cancelar</CButton
+                  >
+                </CModalFooter>
+              </CModalContent>
+              <CModalOverlay />
+            </CModal>
+          </CFlex>
+        </template>
+      </CModalBody>
+    </CModalContent>
+    <CModalOverlay />
+  </CModal>
 </template>
 
 <script>
-import Quagga from 'quagga';
+import Icon from '@/components/BaseIcon.vue';
+
 export default {
   name: 'BarCodeScanner',
+  components: {
+    Icon,
+  },
+  model: {
+    prop: 'value',
+    event: 'close',
+  },
   props: {
-    onDetected: {
-      type: Function,
-      default(result) {
-        console.log('detected: ', result);
-      },
-    },
-    onProcessed: {
-      type: Function,
-      default(result) {
-        let drawingCtx = Quagga.canvas.ctx.overlay;
-        let drawingCanvas = Quagga.canvas.dom.overlay;
-        if (result) {
-          if (result.boxes) {
-            drawingCtx.clearRect(
-              0,
-              0,
-              parseInt(drawingCanvas.getAttribute('width')),
-              parseInt(drawingCanvas.getAttribute('height'))
-            );
-            result.boxes
-              .filter(function (box) {
-                return box !== result.box;
-              })
-              .forEach(function (box) {
-                Quagga.ImageDebug.drawPath(box, { x: 0, y: 1 }, drawingCtx, {
-                  color: 'green',
-                  lineWidth: 2,
-                });
-              });
-          }
-          if (result.box) {
-            Quagga.ImageDebug.drawPath(result.box, { x: 0, y: 1 }, drawingCtx, {
-              color: '#00F',
-              lineWidth: 2,
-            });
-          }
-          if (result.codeResult && result.codeResult.code) {
-            Quagga.ImageDebug.drawPath(
-              result.line,
-              { x: 'x', y: 'y' },
-              drawingCtx,
-              { color: 'red', lineWidth: 3 }
-            );
-          }
-        }
-      },
-    },
-    readerTypes: {
-      type: Array,
-      default: () => ['code_128_reader'],
-    },
-    readerSize: {
-      type: Object,
-      default: () => ({
-        width: 640,
-        height: 480,
-      }),
-      validator: (o) =>
-        typeof o.width === 'number' && typeof o.height === 'number',
-    },
-    aspectRatio: {
-      type: Object,
-      default: () => ({
-        min: 1,
-        max: 2,
-      }),
-      validator: (o) => typeof o.min === 'number' && typeof o.max === 'number',
-    },
-    facingMode: {
-      type: String,
-      default: () => 'environment',
-    },
+    value: false,
   },
-
-  data: function () {
-    return {
-      selectedDevice: undefined,
-      test: undefined,
-      devicesList: [],
-    };
-  },
-  computed: {
-    quaggaState() {
-      return {
-        src: 'imageName.jpg',
-        numOfWorkers: 0,
-        inputStream: {
-          type: 'ImageStream',
-          size: 800,
-        },
-        locate: true,
-        decoder: {
-          readers: [
-            'code_128_reader',
-            'ean_reader',
-            'ean_8_reader',
-            'code_39_reader',
-            'code_39_vin_reader',
-            'codabar_reader',
-            'upc_reader',
-            'upc_e_reader',
-            'i2of5_reader',
-            '2of5_reader',
-            'code_93_reader',
-          ],
-        },
-      };
-    },
-  },
+  data: () => ({
+    devices: [],
+    selectedDeviceId: '',
+    showDeviceSelector: false,
+    loadingCamera: false,
+    Scanner: undefined,
+  }),
   methods: {
-    processEAN(e) {
-      if (e.target.files && e.target.files.length) {
-        const src = URL.createObjectURL(e.target.files[0]);
-        console.log(src);
-        const t = Quagga.decodeSingle(
+    async loadCamera() {
+      const devices = await Html5Qrcode.getCameras(); //.then(devices => {
+      this.devices = devices;
+      /**
+       * devices would be an array of objects of type:
+       * { id: "id", label: "label" }
+       */
+      if (devices && devices.length) {
+        let cameraId = this.selectedDeviceId || devices[0].id;
+        this.selectedDeviceId = cameraId;
+        console.log('CameraID => ', cameraId);
+        // .. use this to start scanning.
+
+        await this.Scanner.start(
+          cameraId,
           {
-            src,
+            fps: 10, // Optional, frame per seconds for qr code scanning
+            qrbox: 150, // Optional, if you want bounded box UI
           },
-          (result) => {
-            console.log(result);
+          async (decodedText, decodedResult) => {
+            // do something when code is read
+            console.log('decodedText => ', decodedText);
+            console.log('decodedResult => ', decodedResult);
+
+            const response = await this.fetchBook(decodedText);
+            if (response) {
+              this.$emit('fetchBook', response);
+              await this.closeModal();
+            }
+          },
+          (errorMessage) => {
+            // parse error, ignore it.
+            // console.error(errorMessage);
           }
         );
-        console.log(t);
+      }
+    },
+    async reloadCamera() {
+      this.loadingCamera = true;
+      await this.Scanner.stop();
+      await this.loadCamera();
+      this.showDeviceSelector = false;
+      this.loadingCamera = false;
+    },
+    async closeModal() {
+      await this.Scanner.stop();
+      this.$emit('close', false);
+    },
+    async fetchBook(isbn) {
+      try {
+        const { data } = await this.$axios.get(
+          `https://openlibrary.org/isbn/${isbn}.json`
+        );
+        const { isbn_10 } = data;
+        const { data: bookDetail } = await this.$axios.get(
+          `https://openlibrary.org/api/books?format=json&bibkeys=ISBN:${isbn_10}`
+        );
+
+        return { ...data, ...bookDetail };
+      } catch (error) {
+        return false;
       }
     },
   },
-  watch: {
-    onDetected: function (oldValue, newValue) {
-      if (oldValue) Quagga.offDetected(oldValue);
-      if (newValue) Quagga.onDetected(newValue);
-      console.log('Detected =>', newValue);
-    },
-    onProcessed: function (oldValue, newValue) {
-      if (oldValue) Quagga.offProcessed(oldValue);
-      if (newValue) Quagga.onProcessed(newValue);
-      this.test = newValue;
-      console.log('Processed =>', newValue);
-    },
-  },
-  mounted: async function () {
-    Quagga.onDetected(this.onDetected);
-    Quagga.onProcessed(this.onProcessed);
-  },
-  destroyed: function () {
-    if (this.onDetected) Quagga.offDetected(this.onDetected);
-    if (this.onProcessed) Quagga.offProcessed(this.offProcessed);
-    Quagga.stop();
+  async mounted() {
+    this.loadingCamera = true;
+    setTimeout(async () => {
+      this.Scanner = new Html5Qrcode('qr-scanner');
+      await this.loadCamera();
+      this.loadingCamera = false;
+    }, 1000);
   },
 };
 </script>
 
-<style scoped>
-.viewport {
-  position: relative;
-  width: 100vw;
+<style lang="scss">
+div#qr-scanner {
+  height: 100%;
+  > video {
+    height: 100%;
+  }
 }
-.viewport canvas,
-.viewport video {
-  left: 0;
-  top: 0;
+button.btn-camera-switch {
+  position: absolute;
+  right: 32px;
+  top: 8px;
+  margin-top: 8px;
+  z-index: 999;
 }
 </style>
