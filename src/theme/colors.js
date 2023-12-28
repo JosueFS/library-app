@@ -21,8 +21,31 @@ const colors = {
     600: "#334a74",
     700: "#1a3462",
     800: "#001d51",
-    900: "#001131"
+    900: "#001131",
   },
+  green: {
+    100: "#50B2C0",
+    200: "#255D6A",
+    300: "#0A313C",
+  },
+  purple: {
+    100: "#8381D9",
+    200: "#2A2879",
+  },
+  gray: {
+    100: "#0E1116",
+    200: "#181C2A",
+    300: "#252D4A",
+    400: "#303F73",
+    500: "#8D95AF",
+    600: "#D1D6E4",
+    700: "#E6E8F2",
+    800: "#F8F9FC",
+  },
+  gradient: {
+    horizontal: "linear-gradient(90deg, #7FD1CC 0%, #9694F5 100%)",
+    vertical: "linear-gradient(180deg, #7FD1CC 0%, #9694F5 100%)",
+  }
 }
 
 export default colors;
