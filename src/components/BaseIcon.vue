@@ -1,7 +1,7 @@
 <template>
   <span
     :class="`material-symbols${'-' + iconStyle}`"
-    :style="iconColor ? `color: ${iconColor};` : ''"
+    :style="iconColor ? `color: ${computedColor};` : ''"
     @click="$emit('click')"
   >
     {{ name }}
@@ -26,6 +26,16 @@ export default {
       type: String,
       required: false,
       default: '',
+    },
+  },
+  computed: {
+    isHEXColor() {
+      return this.iconColor?.includes('#');
+    },
+    computedColor() {
+      return this.isHEXColor
+        ? this.iconColor
+        : `var(--chakra-colors-${this.iconColor.replace('.', '-')})`;
     },
   },
 };

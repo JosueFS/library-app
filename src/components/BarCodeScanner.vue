@@ -1,10 +1,11 @@
 <template>
   <CModal :isOpen="value" :onClose="closeModal">
-    <CModalContent minH="300px" h="fit-content">
+    <CModalContent maxW="90%" h="fit-content">
       <CModalHeader>Posicione sobre o código</CModalHeader>
       <CModalCloseButton />
       <CModalBody
         style="position: relative; display: flex; flex-direction: column"
+        pb="6"
       >
         <div id="qr-scanner" style="width: 100%"></div>
 
@@ -40,7 +41,7 @@
                 }
               "
             >
-              <CModalContent ref="content">
+              <CModalContent mt="32">
                 <CModalHeader>Mudar câmera</CModalHeader>
                 <CModalCloseButton />
                 <CModalBody>
@@ -74,6 +75,8 @@
 </template>
 
 <script>
+import CodeReaderMixin from '@/mixins/CodeReaderMixin';
+
 import Icon from '@/components/BaseIcon.vue';
 
 export default {
@@ -81,6 +84,7 @@ export default {
   components: {
     Icon,
   },
+  mixins: [CodeReaderMixin],
   model: {
     prop: 'value',
     event: 'close',
@@ -97,7 +101,7 @@ export default {
   }),
   methods: {
     async loadCamera() {
-      const devices = await Html5Qrcode.getCameras(); //.then(devices => {
+      const devices = await Html5Qrcode.getCameras();
       this.devices = devices;
       /**
        * devices would be an array of objects of type:
@@ -106,24 +110,28 @@ export default {
       if (devices && devices.length) {
         let cameraId = this.selectedDeviceId || devices[0].id;
         this.selectedDeviceId = cameraId;
-        console.log('CameraID => ', cameraId);
-        // .. use this to start scanning.
 
         await this.Scanner.start(
           cameraId,
           {
             fps: 10, // Optional, frame per seconds for qr code scanning
             qrbox: 150, // Optional, if you want bounded box UI
+            //aspectRatio: 1.0,
+            rememberLastUsedCamera: true,
           },
           async (decodedText, decodedResult) => {
-            // do something when code is read
-            console.log('decodedText => ', decodedText);
-            console.log('decodedResult => ', decodedResult);
+            // console.log('decodedText => ', decodedText);
+            // console.log('decodedResult => ', decodedResult);
 
             const response = await this.fetchBook(decodedText);
+            console.log(response);
+
             if (response) {
               this.$emit('fetchBook', response);
-              await this.closeModal();
+
+              if (this.Scanner?.getState() > 1) {
+                await this.closeModal();
+              }
             }
           },
           (errorMessage) => {
@@ -141,30 +149,40 @@ export default {
       this.loadingCamera = false;
     },
     async closeModal() {
-      await this.Scanner.stop();
-      this.$emit('close', false);
-    },
-    async fetchBook(isbn) {
+      /**
+       * Scanner.getState(): Number
+       * Indicates the sanning is not running or user is using file based scanning.
+       * NOT_STARTED = 0,
+       * STOPPED = 1
+       *
+       * // Camera scan is running.
+       * SCANNING = 2,
+       *
+       * // Camera scan is paused but camera is running.
+       * PAUSED = 2,
+       */
       try {
-        const { data } = await this.$axios.get(
-          `https://openlibrary.org/isbn/${isbn}.json`
-        );
-        const { isbn_10 } = data;
-        const { data: bookDetail } = await this.$axios.get(
-          `https://openlibrary.org/api/books?format=json&bibkeys=ISBN:${isbn_10}`
-        );
-
-        return { ...data, ...bookDetail };
+        if (this.Scanner || this.Scanner?.getState() > 1) {
+          await this.Scanner.stop();
+        }
       } catch (error) {
-        return false;
+        console.error('Failed to stop scanner: ', error);
+      } finally {
+        this.$emit('close', false);
       }
     },
   },
   async mounted() {
     this.loadingCamera = true;
     setTimeout(async () => {
-      this.Scanner = new Html5Qrcode('qr-scanner');
-      await this.loadCamera();
+      try {
+        this.Scanner = new Html5Qrcode('qr-scanner');
+        await this.loadCamera();
+      } catch (error) {
+        if (!error === 'HTML Element with id=qr-scanner not found') {
+          console.error('Failed to initialize scanner: ', error);
+        }
+      }
       this.loadingCamera = false;
     }, 1000);
   },

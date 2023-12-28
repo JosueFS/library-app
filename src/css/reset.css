@@ -11,5 +11,5 @@ body,
 #app {
   height: 100%;
   margin: auto;
-  background-color: #e5e5e5;
+  background-color: var(--chakra-colors-main-50);
 }

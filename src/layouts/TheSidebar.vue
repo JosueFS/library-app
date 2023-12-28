@@ -116,19 +116,14 @@ export default {
       this.pinOpenMenu = !this.pinOpenMenu;
     },
     onClickItem(route) {
-      console.log('onClickItem', this.$router);
       if (route !== this.$route.path) {
         this.$router.push(route);
       }
       this.closeMenu();
     },
     onClickAvatar() {
-      console.log('onClickAvatar');
       this.closeMenu();
     },
-  },
-  created() {
-    console.log(this.$chakra);
   },
 };
 </script>

@@ -24,7 +24,10 @@
       :isFavorite="isFavorite"
       @click.native="updFavorites"
     />
-    <CImage :src="`http://placeimg.com/480/640/${book.id}`" :alt="book.title" />
+    <CImage
+      :src="book?.image || `http://placeimg.com/480/640/${book.id}`"
+      :alt="book.title"
+    />
     <CFlex direction="column" p="2" justify="start" text-align="left">
       <CHeading as="h6" font-size="md" line-height="tight" is-truncated>
         {{ book.title }}

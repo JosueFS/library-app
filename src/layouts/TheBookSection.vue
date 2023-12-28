@@ -58,21 +58,15 @@ export default {
   },
   methods: {
     updateWidth(evt) {
-      console.log('evt');
       if (evt?.path?.length) {
         this.currentBreakpoint = evt.path[0].outerWidth;
       }
       if (evt?.length) {
-        //   console.log('evt', evt.path[0].outerWidth);
-        //   //Prevent lower or higher than Min and Max width
-        // } else {
-        console.log('window', evt[0]);
         this.currentBreakpoint = window.outerWidth;
       }
     },
   },
   mounted() {
-    console.log('mounted => ', this);
     this.updateWidth();
     this.containerResizeObserver = new ResizeObserver(this.updateWidth);
     this.containerResizeObserver.observe(this.$el);

@@ -33,8 +33,7 @@
     "chakra-loader": "^1.0.3",
     "graphql-tag": "^2.12.6",
     "sass": "^1.51.0",
-    "vite": "3.1.0",
-    "webpack": "^4.44.0"
+    "vite": "3.1.0"
   },
   "resolutions": {
     "lodash": "^4.17.13",

@@ -79,6 +79,9 @@
 </template>
 
 <script>
+import { mapActions, mapState } from 'pinia';
+import { useLayoutStore } from '@/store/layout';
+
 import TheSidebar from './layouts/TheSidebar.vue';
 import TheHeader from './layouts/TheHeader.vue';
 import Icon from '@/components/BaseIcon.vue';
@@ -90,17 +93,15 @@ export default {
     Icon,
   },
   data: () => ({
-    windowSize: 960,
     showSearchInput: false,
   }),
   computed: {
-    isMobile() {
-      return this.windowSize < 768;
-    },
+    ...mapState(useLayoutStore, { isMobile: 'mobile' }),
   },
   methods: {
+    ...mapActions(useLayoutStore, ['setIsMobile']),
     updateWindowSize() {
-      this.windowSize = window.innerWidth;
+      this.setIsMobile(window.innerWidth < 768);
     },
   },
   async created() {
@@ -118,8 +119,7 @@ export default {
   font-family: Nunito, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+  color: var(--chakra-colors-main-500);
 }
 
 .hide-scrollbar {
