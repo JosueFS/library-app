@@ -1,16 +1,15 @@
 <template>
-  <span
-    :class="`material-symbols${'-' + iconStyle}`"
-    :style="iconColor ? `color: ${computedColor};` : ''"
-    @click="$emit('click')"
-  >
-    {{ name }}
-  </span>
+  <Icon :icon="name" :color="computedColor" :width="size" :height="size" />
 </template>
 
 <script>
+import { Icon } from '@iconify/vue2';
+
 export default {
-  name: 'Icon',
+  name: 'BaseIcon',
+  components: {
+    Icon
+  },
   props: {
     name: {
       type: String,
@@ -26,6 +25,11 @@ export default {
       type: String,
       required: false,
       default: '',
+    },
+    size: {
+      type: Number,
+      required: false,
+      default: 24,
     },
   },
   computed: {
