@@ -33,18 +33,19 @@ const colors = {
     200: "#2A2879",
   },
   gray: {
-    100: "#0E1116",
-    200: "#181C2A",
-    300: "#252D4A",
-    400: "#303F73",
-    500: "#8D95AF",
-    600: "#D1D6E4",
-    700: "#E6E8F2",
-    800: "#F8F9FC",
+    100: "#F8F9FC",
+    200: "#E6E8F2",
+    300: "#D1D6E4",
+    400: "#8D95AF",
+    500: "#303F73",
+    600: "#252D4A",
+    700: "#181C2A",
+    800: "#0E1116",
   },
   gradient: {
     horizontal: "linear-gradient(90deg, #7FD1CC 0%, #9694F5 100%)",
     vertical: "linear-gradient(180deg, #7FD1CC 0%, #9694F5 100%)",
+    radial: "radial-gradient(circle, rgb(38, 49, 84) 0%, rgb(32, 41, 67) 20%, rgb(30, 37, 59) 35%, rgb(25, 30, 45) 49%, rgb(24, 28, 42) 100%)",
   }
 }
 
