@@ -1,21 +1,20 @@
 <template>
   <CButton
     px="2"
-    :color="variant === 'outline' ? color : '#000'"
-    :variant="variant"
+    color="gray.400"
+    variant="active"
     borderColor="transparent"
     style="justify-content: flex-start"
     :_hover="{
-      bg: color,
-      color: dark ? 'black' : 'white',
+      color: 'gray.100',
       borderColor: variant === 'outline' ? '' : color,
     }"
-    :_active="{ bg: `${colorName}.400`, color: dark ? 'black' : 'white' }"
     @click="$emit('click')"
   >
-    <CFlex alignItems="center" gap="2" overflow="hidden">
-      <Icon :name="icon" class="fs-20" iconColor="currentColor"> </Icon>
-      <CText isTruncated fontSize="14" fontWeight="800" class="lh-16">{{
+    <CFlex alignItems="center" gap="3" overflow="hidden">
+      <div v-chakra minH="24px" minW="4px" rounded="full" class="sidebar-item-active"></div>
+      <Icon :name="icon" iconColor="currentColor"> </Icon>
+      <CText isTruncated fontSize="16" fontWeight="600" class="lh-24">{{
         title
       }}</CText>
     </CFlex>
@@ -43,7 +42,7 @@ export default {
     color: {
       type: String,
       required: false,
-      default: 'blue.800',
+      default: 'gray.400',
     },
     dark: {
       type: Boolean,
@@ -64,5 +63,8 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
+.sidebar-item-active {
+  background-image: var(--chakra-colors-gradient-vertical);
+}
 </style>
