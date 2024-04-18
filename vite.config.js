@@ -13,7 +13,7 @@ export default {
             'apollo-client',
             'apollo-link',
             'apollo-link-context',
-            'apollo-link-http',
+            'apollo-link-http'
           ],
         },
       },
