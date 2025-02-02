@@ -3,8 +3,8 @@ import vue from '@vitejs/plugin-vue2';
 import graphql from '@rollup/plugin-graphql';
 
 export default {
+  base: '',
   build: {
-    base: '',
     rollupOptions: {
       output: {
         manualChunks: {
