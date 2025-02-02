@@ -3,6 +3,7 @@ import vue from '@vitejs/plugin-vue2';
 import graphql from '@rollup/plugin-graphql';
 
 export default {
+  base: '',
   build: {
     rollupOptions: {
       output: {
@@ -13,7 +14,7 @@ export default {
             'apollo-client',
             'apollo-link',
             'apollo-link-context',
-            'apollo-link-http',
+            'apollo-link-http'
           ],
         },
       },
