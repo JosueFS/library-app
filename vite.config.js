@@ -4,7 +4,7 @@ import graphql from '@rollup/plugin-graphql';
 
 export default {
   build: {
-    base: '/library-app/',
+    base: '',
     rollupOptions: {
       output: {
         manualChunks: {
